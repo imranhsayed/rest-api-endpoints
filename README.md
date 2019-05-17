@@ -32,7 +32,7 @@ I use [Git](https://github.com/) for versioning.
 
 ## Author :pencil:
 
-* **[Imran Sayed](https://codeytek.com)**-
+* **[Imran Sayed](https://codeytek.com)**
 
 ## License :page_facing_up:
 
