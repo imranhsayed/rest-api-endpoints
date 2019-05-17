@@ -20,13 +20,15 @@ class Rae_Register_Auth_API {
 	function rae_rest_user_endpoints() {
 		/**
 		 * Handle User Login request.
+		 *
+		 * This endpoint takes 'username' and 'password' in the body of the request.
+		 * Returns the user object on success
+		 * Also handles error by returning the relevant error if the fields are empty or credentials don't match.
 		 */
 		register_rest_route( 'wp/v2/rae', '/user/login', array(
 			'methods' => 'POST',
 			'callback' => array( $this, 'rae_rest_user_login_endpoint_handler' ),
 		));
-
-
 	}
 
 	/**
@@ -50,6 +52,7 @@ class Rae_Register_Auth_API {
 				__( "Username field is required", 'rest-api-endpoints' ),
 				array( 'status' => 400 )
 				);
+
 			return $error;
 		}
 
@@ -59,6 +62,7 @@ class Rae_Register_Auth_API {
 				__( "Password field is required", 'rest-api-endpoints' ),
 				array( 'status' => 400 )
 			);
+
 			return $error;
 		}
 
@@ -71,7 +75,6 @@ class Rae_Register_Auth_API {
 			$error->add( 406, __( 'User not found. Check credentials', 'rest-api-endpoints' ) );
 			return $error;
 		}
-
 
 		return new WP_REST_Response( $response );
 	}
