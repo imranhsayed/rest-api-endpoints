@@ -68,10 +68,12 @@ class Rae_Register_Auth_API {
 
 		$user = wp_authenticate( $username, $password  );
 
+		// If user found
 		if ( ! is_wp_error( $user ) ) {
 			$response['status'] = 200;
 			$response['user'] = $user;
 		} else {
+			
 			$error->add( 406, __( 'User not found. Check credentials', 'rest-api-endpoints' ) );
 			return $error;
 		}
