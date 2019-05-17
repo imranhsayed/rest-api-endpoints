@@ -5,6 +5,15 @@
 * :bust_in_silhouette: Login End Point
 * :page_with_curl: Create Post End Point
 
+## Login Endpoint Demo :video_camera:
+
+When we access the end point on URI: `http://your-domain/wp-json/wp/v2/rae/user/login`,
+and we pass our username and password in the body using postman, we get:
+* User Object on success
+* Error when fields are empty or incorrect credentials
+* Any other error.
+![](login-endpoint-demo.gif)
+
 ## Getting Started :clipboard:
 
 These instructions will get you a copy of the project up and running on your local machine for development purposes.
@@ -21,6 +30,9 @@ You need to have any WordPress theme activated on your WordPress project, which 
 ## Use :ski:
 
 There are different end points that are available. Some are public while others are protected.
+
+* :bust_in_silhouette: Login End Point `http://your-domain/wp-json/wp/v2/rae/user/login`
+* :page_with_curl: Create Post End Point
 
 ## Contributing :busts_in_silhouette:
 
