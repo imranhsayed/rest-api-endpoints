@@ -1,6 +1,6 @@
 # REST API ENDPOINT
 
-> This plugins provides you different endpoints using WordPress REST API.
+> This plugin provides you different endpoints using WordPress REST API.
 
 * :bust_in_silhouette: Login End Point
 * :page_with_curl: Create Post End Point
@@ -9,16 +9,17 @@
 
 These instructions will get you a copy of the project up and running on your local machine for development purposes.
 
-### Prerequisites
+## Prerequisites :door:
 
 You need to have any WordPress theme activated on your WordPress project, which has REST API enabled.
 
-### Installing :wrench:
+## Installation :wrench:
 
 1. Clone the plugin directory in the `/wp-content/plugins/` directory, or install a zipped directory of this plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress
 
-## Use 
+## Use :ski:
+
 There are different end points that are available. Some are public while others are protected.
 
 ## Contributing :busts_in_silhouette:
