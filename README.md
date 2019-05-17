@@ -8,10 +8,11 @@
 ## Login Endpoint Demo :video_camera:
 
 When we access the end point on URI: `http://your-domain/wp-json/wp/v2/rae/user/login`,
-and we pass our username and password in the body using postman, we get:
+and we pass our username and password in the body using postman, we get the following with a status code:
 * User Object on success
 * Error when fields are empty or incorrect credentials
 * Any other error.
+
 ![](login-endpoint-demo.gif)
 
 ## Getting Started :clipboard:
