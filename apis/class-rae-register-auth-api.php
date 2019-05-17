@@ -73,7 +73,7 @@ class Rae_Register_Auth_API {
 			$response['status'] = 200;
 			$response['user'] = $user;
 		} else {
-			
+			// If user not found
 			$error->add( 406, __( 'User not found. Check credentials', 'rest-api-endpoints' ) );
 			return $error;
 		}
