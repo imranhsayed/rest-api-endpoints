@@ -15,6 +15,16 @@ and we pass our username and password in the body using postman, we get the foll
 
 ![](login-endpoint-demo.gif)
 
+## Create a new post Endpoint Demo :video_camera:
+
+When we access the end point on URI: `http://your-domain/wp-json/wp/v2/rae/post/create`,
+and we pass our 'user_id', 'title' and 'content' in the body using postman, we get the following with a status code:
+* New post id if the post is created.
+* Error when fields are empty or if the user with the given id does not have capability to publish posts.
+* Any other error.
+
+![](create-new-post.gif)
+
 ## Getting Started :clipboard:
 
 These instructions will get you a copy of the project up and running on your local machine for development purposes.
@@ -33,7 +43,16 @@ You need to have any WordPress theme activated on your WordPress project, which 
 There are different end points that are available. Some are public while others are protected.
 
 * :bust_in_silhouette: Login End Point `http://your-domain/wp-json/wp/v2/rae/user/login`
-* :page_with_curl: Create Post End Point
+
+> Params to be sent in the body
+`username(String)` and `password(String)`
+Return Value: `User Object or Error (Object)`
+
+* :page_with_curl: Create Post End Point `http://your-domain/wp-json/wp/v2/rae/post/create`
+
+> Params to be sent in the body
+`user_id(Int)`, `title(String)` and `content(String)`
+Return Value: `Object with post ID and status or Error (Object)`
 
 ## Contributing :busts_in_silhouette:
 
