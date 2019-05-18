@@ -39,6 +39,7 @@ class Rae_Register_Posts_Api {
 		$response = array();
 		$parameters = $request->get_params();
 
+		$user_id = sanitize_text_field( $parameters['user_id'] );
 		$title = sanitize_text_field( $parameters['title'] );
 		$content = sanitize_text_field( $parameters['content'] );
 
@@ -75,11 +76,23 @@ class Rae_Register_Posts_Api {
 			return $error;
 		}
 
+		// Check if the user with this id can publish posts
+		$user_can_publish_post = user_can( $user_id,'publish_posts' );
+		if ( ! $user_can_publish_post ) {
+			$error->add(
+				400,
+				__( "You don't have previlige to publish a post", 'rest-api-endpoints' ),
+				array( 'status' => 400 )
+			);
+
+			return $error;
+		}
+
 		$my_post = array(
 			'post_type' => 'post',
 			'post_author' => $user_id,
 			'post_title'   => sanitize_text_field( $title ),
-			'post_status'   => 'pending',
+			'post_status'   => 'publish',
 			'post_content'   => $content,
 		);
 		// It will return the new inserted $post_id
@@ -88,7 +101,7 @@ class Rae_Register_Posts_Api {
 		// If user found
 		if ( ! is_wp_error( $post_id ) ) {
 			$response['status'] = 200;
-			$response['post_is'] = $post_id;
+			$response['post_id'] = $post_id;
 		} else {
 			// If user not found
 			$error->add( 406, __( 'Post creating failed', 'rest-api-endpoints' ) );
