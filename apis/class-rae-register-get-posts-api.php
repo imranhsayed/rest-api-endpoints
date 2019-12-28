@@ -145,14 +145,22 @@ class Rae_Register_Get_Posts_Api {
 		if ( ! empty( $post_IDs ) && is_array( $post_IDs ) ) {
 			foreach ( $post_IDs as $post_ID ) {
 
+				$author_id = get_post_field( 'post_author', $post_ID );
+
 				$post_data                     = [];
-				$post_data['post_title']       = get_the_title( $post_ID );
-				$post_data['post_excerpt']     = get_the_excerpt( $post_ID );
-				$post_data['permalink']        = get_the_permalink( $post_ID );
+				$post_data['id']               = $post_ID;
+				$post_data['title']            = get_the_title( $post_ID );
+				$post_data['excerpt']          = get_the_excerpt( $post_ID );
+				$post_data['date']             = get_the_date( '', $post_ID );
 				$post_data['attachment_image'] = [
 					'img_sizes'  => wp_get_attachment_image_sizes( get_post_thumbnail_id( $post_ID ) ),
-					'img_src'    => wp_get_attachment_image_src( get_post_thumbnail_id( $post_ID ) ),
+					'img_src'    => wp_get_attachment_image_src( get_post_thumbnail_id( $post_ID ), 'full' ),
 					'img_srcset' => wp_get_attachment_image_srcset( get_post_thumbnail_id( $post_ID ) ),
+				];
+				$post_data['categories']       = get_the_category( $post_ID );
+				$post_data['meta']             = [
+					'author_id'   => $author_id,
+					'author_name' => get_the_author_meta( 'display_name', $author_id ),
 				];
 
 				array_push( $posts_result, $post_data );
