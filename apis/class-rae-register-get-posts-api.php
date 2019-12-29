@@ -2,24 +2,20 @@
 /**
  * Register Get Posts Api
  *
- * @package REST API ENDPOINT
+ * @package REST API ENDPOINTS
  */
 
-/**
- * Class Rae_Register_Get_Posts_Api
- */
 class Rae_Register_Get_Posts_Api {
 
 	/**
-	 * Rae_Register_Get_Posts_Api constructor.
+	 * Constructor
 	 */
 	public function __construct() {
+		$this->post_type = 'post';
+		$this->route = '/posts';
+		$this->post_per_page = 9;
 
-		$this->post_type     = 'post';
-		$this->route         = '/posts';
-
-		add_action( 'rest_api_init', array( $this, 'rest_posts_endpoints' ) );
-
+		add_action( 'rest_api_init', [ $this, 'rest_posts_endpoints' ] );
 	}
 
 	/**
@@ -28,61 +24,61 @@ class Rae_Register_Get_Posts_Api {
 	public function rest_posts_endpoints() {
 
 		/**
-		 * Handle Get Case Studies Posts Request: GET Request
+		 * Handle Posts Request: GET Request
 		 *
-		 * This endpoint takes 'categories_child_id', 'audience_child_id' both optionally in query params of the request.
-		 * Returns the user object on success
-		 * Also handles error by returning the relevant error if the fields are empty.
+		 * This endpoint takes 'page_no' in query params of the request.
+		 * Returns the posts data object on success
+		 * Also handles error by returning the relevant error.
 		 *
 		 * Example: http://example.com/wp-json/rae/v1/posts?page_no=1
 		 */
 		register_rest_route(
 			'rae/v1',
 			$this->route,
-			array(
-				'methods'  => 'GET',
-				'callback' => array( $this, 'rest_endpoint_handler' ),
-			)
+			[
+				'method' => 'POST',
+				'callback' => [ $this, 'rest_endpoint_handler' ],
+			]
 		);
 	}
-
 
 	/**
 	 * Get posts call back.
 	 *
-	 * It will return posts with given term ids, else the default posts.
+	 * Returns the posts data object on success
 	 *
 	 * @param WP_REST_Request $request request object.
 	 *
 	 * @return WP_Error|WP_REST_Response response object.
 	 */
 	public function rest_endpoint_handler( WP_REST_Request $request ) {
-
-		$response      = [];
-		$parameters    = $request->get_params();
-		$posts_page_no = ! empty( $parameters['page_no'] ) ? intval( sanitize_text_field( $parameters['page_no'] ) ) : 1;
+		$response = [];
+		$parameters = $request->get_params();
+		$posts_page_no = ! empty( $parameters['page_no'] ) ? intval( sanitize_text_field( $parameters['page_no'] ) ) : '';
 
 		// Error Handling.
 		$error = new WP_Error();
 
-		$cases_data = $this->get_posts( $posts_page_no );
+		$posts_data = $this->get_posts( $posts_page_no );
 
 		// If posts found.
-		if ( ! is_wp_error( $cases_data['posts_data'] ) && ! empty( $cases_data['posts_data'] ) ) {
-			$response['status']      = 200;
-			$response['posts_data'] = $cases_data['posts_data'];
-			$response['found_posts'] = $cases_data['found_posts'];
+		if ( ! empty( $posts_data['posts_data'] ) ) {
 
-			$total_found_posts      = intval( $cases_data['found_posts'] );
-			$response['page_count'] = $this->calculate_page_count( $total_found_posts, 9 );
+			$response['status'] = 200;
+			$response['posts_data'] = $posts_data['posts_data'];
+			$response['found_posts'] = $posts_data['found_posts'];
+			$response['page_count'] = $posts_data['page_count'];
 
 		} else {
-			// If posts not found.
+
+			// If the posts not found.
 			$error->add( 406, __( 'Posts not found', 'rest-api-endpoints' ) );
 			return $error;
+
 		}
 
 		return new WP_REST_Response( $response );
+
 	}
 
 	/**
@@ -94,40 +90,42 @@ class Rae_Register_Get_Posts_Api {
 	 * @return int
 	 */
 	public function calculate_page_count( $total_found_posts, $post_per_page ) {
-
-		return ( (int) ( $total_found_posts / $post_per_page ) ) + ( ( $total_found_posts % $post_per_page ) ? 1 : 0 );
+		return ( (int) ( $total_found_posts / $post_per_page ) + ( ( $total_found_posts % $post_per_page ) ? 1 : 0 ) );
 	}
 
+
 	/**
-	 * Get case studies cpt posts.
-	 * Call back function: Not to be called directory.
-	 * Use get_profiles_by_slug() instead.
+	 * Get posts data.
 	 *
-	 * @param array   $post_term_ids Category term id array.
 	 * @param integer $page_no page no.
-	 * @return array Case Studies posts.
+	 *
+	 * @return array Posts.
 	 */
 	public function get_posts( $page_no = 1 ) {
 
 		$args = [
-			'post_type'              => $this->post_type,
-			'post_status'            => 'publish',
-			'posts_per_page'         => 9,
-			'fields'                 => 'ids',
-			'orderby'                => 'date',
-			'paged'                  => $page_no,
+			'post_type' => $this->post_type	,
+			'post_status' => 'publish',
+			'posts_per_page' => $this->post_per_page,
+			'fields' => 'ids',
+			'orderby' => 'date',
+			'paged'   => $page_no,
 			'update_post_meta_cache' => false,
 			'update_post_term_cache' => false,
+
 		];
 
-		$latest_posts_by_category = new \WP_Query( $args );
+		$latest_post_ids = new WP_Query( $args );
 
-		$posts_result = $this->get_required_posts_data( $latest_posts_by_category->posts );
-		$found_posts  = $latest_posts_by_category->found_posts;
+		$post_result = $this->get_required_posts_data( $latest_post_ids->posts );
+		$found_posts = $latest_post_ids->found_posts;
+		$page_count = $this->calculate_page_count( $found_posts, $this->post_per_page );
 
 		return [
-			'posts_data' => $posts_result,
+			'posts_data' => $post_result,
 			'found_posts' => $found_posts,
+			'page_count'  => $page_count,
+
 		];
 	}
 
@@ -140,37 +138,39 @@ class Rae_Register_Get_Posts_Api {
 	 */
 	public function get_required_posts_data( $post_IDs ) {
 
-		$posts_result = [];
+		$post_result = [];
 
-		if ( ! empty( $post_IDs ) && is_array( $post_IDs ) ) {
-			foreach ( $post_IDs as $post_ID ) {
-
-				$author_id = get_post_field( 'post_author', $post_ID );
-
-				$post_data                     = [];
-				$post_data['id']               = $post_ID;
-				$post_data['title']            = get_the_title( $post_ID );
-				$post_data['excerpt']          = get_the_excerpt( $post_ID );
-				$post_data['date']             = get_the_date( '', $post_ID );
-				$post_data['attachment_image'] = [
-					'img_sizes'  => wp_get_attachment_image_sizes( get_post_thumbnail_id( $post_ID ) ),
-					'img_src'    => wp_get_attachment_image_src( get_post_thumbnail_id( $post_ID ), 'full' ),
-					'img_srcset' => wp_get_attachment_image_srcset( get_post_thumbnail_id( $post_ID ) ),
-				];
-				$post_data['categories']       = get_the_category( $post_ID );
-				$post_data['meta']             = [
-					'author_id'   => $author_id,
-					'author_name' => get_the_author_meta( 'display_name', $author_id ),
-				];
-
-				array_push( $posts_result, $post_data );
-
-			}
+		if ( empty( $post_IDs ) && ! is_array( $post_IDs ) ) {
+			return $post_result;
 		}
 
-		return $posts_result;
-	}
+		foreach ( $post_IDs as $post_ID ) {
 
+			$author_id = get_post_field( 'post_author', $post_ID );
+			$attachment_id = get_post_thumbnail_id( $post_ID );
+
+			$post_data = [];
+			$post_data['id'] = $post_ID;
+			$post_data['title'] = get_the_title( $post_ID );
+			$post_data['excerpt'] = get_the_excerpt( $post_ID );
+			$post_data['date'] = get_the_date( '', $post_ID );
+			$post_data[ 'attachment_image' ] = [
+				'img_sizes' => wp_get_attachment_image_sizes( $attachment_id ),
+				'img_src' => wp_get_attachment_image_src( $attachment_id, 'full'  ),
+				'img_srcset' => wp_get_attachment_image_srcset( $attachment_id  ),
+			];
+			$post_data['categories'] = get_the_category( $post_ID );
+			$post_data['meta'] = [
+				'author_id' => $author_id,
+				'author_name' => get_the_author_meta( 'display_name', $author_id )
+			];
+
+			array_push( $post_result, $post_data );
+
+		}
+
+		return $post_result;
+	}
 }
 
 new Rae_Register_Get_Posts_Api();
