@@ -23,8 +23,13 @@ class Rae_Register_Posts_Api {
 		 * This endpoint takes 'title', 'content' and 'user_id' in the body of the request.
 		 * Returns the user object on success
 		 * Also handles error by returning the relevant error if the fields are empty.
+		 *
+		 * Example: http://example.com/wp-json/rae/v1/post/create
 		 */
-		register_rest_route( 'wp/v2/rae', '/post/create', array(
+		register_rest_route(
+			'wp/v2/rae',
+			'/post/create',
+			array(
 			'methods' => 'POST',
 			'callback' => array( $this, 'rae_rest_create_post_endpoint_handler' ),
 		));

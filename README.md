@@ -53,6 +53,18 @@ Return Value: `User Object or Error (Object)`
 > Params to be sent in the body
 `user_id(Int)`, `title(String)` and `content(String)`
 Return Value: `Object with post ID and status or Error (Object)`
+>
+
+## Available Endpoints:
+
+### Get single post ( GET request )
+* `http://example.com/wp-json/rae/v1/post?post_id=1`
+
+### Get posts by page no: ( GET Request )
+* http://example.com/wp-json/rae/v1/posts?page_no=1
+
+### Create new post: ( POST Request )
+* http://example.com/wp-json/rae/v1/post/create
 
 ## Contributing :busts_in_silhouette:
 

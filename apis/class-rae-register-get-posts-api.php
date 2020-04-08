@@ -36,7 +36,7 @@ class Rae_Register_Get_Posts_Api {
 			'rae/v1',
 			$this->route,
 			[
-				'method'   => 'POST',
+				'method'   => 'GET',
 				'callback' => [ $this, 'rest_endpoint_handler' ],
 			]
 		);

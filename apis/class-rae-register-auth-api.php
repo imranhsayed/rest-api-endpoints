@@ -24,8 +24,13 @@ class Rae_Register_Auth_API {
 		 * This endpoint takes 'username' and 'password' in the body of the request.
 		 * Returns the user object on success
 		 * Also handles error by returning the relevant error if the fields are empty or credentials don't match.
+		 *
+		 * Example: http://example.com/wp-json/wp/v2/rae/user/login
 		 */
-		register_rest_route( 'wp/v2/rae', '/user/login', array(
+		register_rest_route(
+			'wp/v2/rae',
+			'/user/login',
+			array(
 			'methods' => 'POST',
 			'callback' => array( $this, 'rae_rest_user_login_endpoint_handler' ),
 		));
