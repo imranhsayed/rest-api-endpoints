@@ -21,6 +21,7 @@ define( 'RPE_PLUGIN_PATH', __FILE__ );
 
 // File Includes
 include_once 'inc/custom-functions.php';
+include_once 'inc/class-rae-customizer.php';
 include_once 'apis/class-rae-register-header-footer-api.php';
 include_once 'apis/class-rae-register-auth-api.php';
 include_once 'apis/class-rae-register-posts-api.php';

@@ -72,11 +72,14 @@ class Rae_Register_Header_Footer_Api {
 			$response['status']    = 200;
 			$response['data'] = [
 				'header' => [
-					'site_logo' => '',
-					'header_menu_items' => $header_menu_items,
+					'siteLogoUrl' => $this->get_custom_logo_url( 'custom_logo' ),
+					'siteTitle' => get_bloginfo( 'title' ),
+					'siteDescription' => get_bloginfo( 'description' ),
+					'favicon' => get_site_icon_url(),
+					'headerMenuItems' => $header_menu_items,
 				],
 				'footer' => [
-					'footer_menu_items' => $footer_menu_items,
+					'footerMenuItems' => $footer_menu_items,
 				]
 			];
 
@@ -102,6 +105,18 @@ class Rae_Register_Header_Footer_Api {
 	 */
 	public function get_required_post_data( $post_ID ) {
 
+	}
+
+	/**
+	 * Get Custom logo URL.
+	 *
+	 * @return string
+	 */
+	public function get_custom_logo_url( $key ) {
+
+		$custom_logo_id = get_theme_mod( $key );
+		$image = wp_get_attachment_image_src( $custom_logo_id , 'full' );
+		return $image[0];
 	}
 
 	/**

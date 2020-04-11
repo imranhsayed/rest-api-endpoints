@@ -53,7 +53,12 @@ Return Value: `User Object or Error (Object)`
 > Params to be sent in the body
 `user_id(Int)`, `title(String)` and `content(String)`
 Return Value: `Object with post ID and status or Error (Object)`
->
+
+
+## Features
+* Adds option to add social links in customizer
+* Registers two custom menus for header ( menu location = travel-menu-header ) and for footer ( menu location = travel-menu-footer )
+* Registers custom end points
 
 ## Available Endpoints:
 
@@ -61,7 +66,11 @@ Return Value: `Object with post ID and status or Error (Object)`
 * `http://example.com/wp-json/rae/v1/post?post_id=1`
 
 ### Get posts by page no: ( GET Request )
-* http://example.com/wp-json/rae/v1/posts?page_no=1
+* `http://example.com/wp-json/rae/v1/posts?page_no=1`
+
+### Get header and footer date: ( GET Request )
+* Get the header data ( site title, site description , site logo URL, menu items ) and footer data ( footer menu items, social icons )
+* `http://example.com/wp-json/rae/v1/header-footer?header_location_id=primary&footer_location_id=secondary`
 
 ### Create new post: ( POST Request )
 * http://example.com/wp-json/rae/v1/post/create
