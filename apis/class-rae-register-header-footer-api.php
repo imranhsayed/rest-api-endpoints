@@ -80,6 +80,7 @@ class Rae_Register_Header_Footer_Api {
 				],
 				'footer' => [
 					'footerMenuItems' => $footer_menu_items,
+					'socialLinks' => $this->get_social_icons(),
 				]
 			];
 
@@ -117,6 +118,32 @@ class Rae_Register_Header_Footer_Api {
 		$custom_logo_id = get_theme_mod( $key );
 		$image = wp_get_attachment_image_src( $custom_logo_id , 'full' );
 		return $image[0];
+	}
+
+	/**
+	 * Get social icons
+	 *
+	 * @return array $social_icons
+	 */
+	public function get_social_icons() {
+
+		$social_icons = [];
+		$social_icons_name = [ 'facebook', 'twitter', 'instagram', 'youtube' ];
+
+		foreach ( $social_icons_name as $social_icon_name ) {
+
+			$social_link = get_theme_mod( sprintf( 'rae_%s_link', $social_icon_name ) );
+
+			if ( $social_link ) {
+				array_push( $social_icons, [
+					'iconName' =>esc_attr( $social_icon_name ),
+					'iconUrl' => esc_url( $social_link )
+				] );
+			}
+		}
+
+		return $social_icons;
+
 	}
 
 	/**
