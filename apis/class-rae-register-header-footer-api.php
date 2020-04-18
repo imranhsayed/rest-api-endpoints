@@ -169,29 +169,54 @@ class Rae_Register_Header_Footer_Api {
 		// Get menu items by menu name
 		$menu_data = wp_get_nav_menu_items( $object->name, $args );
 		$menu_items = [];
-		$submenu_items = [];
 
 		if ( ! empty( $menu_data ) ) {
 
-			// Menus
+			// Menus ( Loop through the menu, and push all the parent menu items first ).
 			foreach ( $menu_data as $item ) {
 				if ( empty( $item->menu_item_parent ) ) {
-					$menu_items[ $item->ID ]             = [];
-					$menu_items[ $item->ID ]['ID']       = $item->ID;
-					$menu_items[ $item->ID ]['title']    = $item->title;
-					$menu_items[ $item->ID ]['url']      = $item->url;
-					$menu_items[ $item->ID ]['children'] = [];
+					$menu_item              = [];
+					$menu_item['ID']        = $item->ID;
+					$menu_item['title']     = $item->title;
+					$menu_item['url']       = $item->url;
+					$menu_item['children']  = [];
+
+					// We are also getting the page slug and the page id that this menu is linked to.
+					$menu_item['pageSlug'] = get_post_field( 'post_name', $item->object_id );
+					$menu_item['pageID']   = intval( $item->object_id );
+
+					array_push( $menu_items, $menu_item );
 				}
 			}
 
-			// Submenus
+			// Submenus: ( Loop through the menu again, and push all the child menu items ).
 			foreach ( $menu_data as $item ) {
+
+				// If the menu has a parent, it means its a child menu.
 				if ( $item->menu_item_parent ) {
-					$submenu_items[ $item->ID ]                                     = [];
-					$submenu_items[ $item->ID ]['ID']                               = $item->ID;
-					$submenu_items[ $item->ID ]['title']                            = $item->title;
-					$submenu_items[ $item->ID ]['url']                              = $item->url;
-					$menu_items[ $item->menu_item_parent ]['children'][ $item->ID ] = $submenu_items[ $item->ID ];
+
+					// Create a child menu array.
+					$submenu_item              = [];
+					$submenu_item['ID']        = $item->ID;
+					$submenu_item['title']     = $item->title;
+					$submenu_item['url']       = $item->url;
+
+					// We are also getting the page slug and the page id that this menu is linked to.
+					$submenu_item['pageSlug'] = get_post_field( 'post_name', $item->object_id );
+					$submenu_item['pageID']   = intval( $item->object_id );
+
+					// Loop through the menu items and find the parent whose child this is.
+					foreach( $menu_items as $key => $parent_item ) {
+
+						// if the parent id of this child menu, is same as the parent menu id.
+						if ( intval( $item->menu_item_parent ) === $parent_item['ID'] ) {
+
+							// push the child menu into its parent menu children property.
+							array_push( $menu_items[ $key ]['children'], $submenu_item );
+
+						}
+					}
+
 				}
 			}
 

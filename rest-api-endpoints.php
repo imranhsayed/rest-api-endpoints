@@ -28,3 +28,6 @@ include_once 'apis/class-rae-register-posts-api.php';
 include_once 'apis/class-rae-test.php';
 include_once 'apis/class-rae-register-get-posts-api.php';
 include_once 'apis/class-rae-register-get-post-api.php';
+include_once 'apis/class-rae-register-parse-blocks.php';
+
+
