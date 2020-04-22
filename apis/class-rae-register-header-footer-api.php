@@ -81,6 +81,9 @@ class Rae_Register_Header_Footer_Api {
 				'footer' => [
 					'footerMenuItems' => $footer_menu_items,
 					'socialLinks' => $this->get_social_icons(),
+					'copyrightText' => $this->get_copyright_text(),
+					'footerSidebarOne' => $this->get_sidebar( 'rwt-sidebar-1' ),
+					'footerSidebarTwo' => $this->get_sidebar( 'rwt-sidebar-2' ),
 				]
 			];
 
@@ -94,17 +97,6 @@ class Rae_Register_Header_Footer_Api {
 		}
 
 		return new WP_REST_Response( $response );
-
-	}
-
-	/**
-	 * Construct a post data that contains, title, excerpt and featured image.
-	 *
-	 * @param {array} $post_ID post id.
-	 *
-	 * @return array
-	 */
-	public function get_required_post_data( $post_ID ) {
 
 	}
 
@@ -144,6 +136,15 @@ class Rae_Register_Header_Footer_Api {
 
 		return $social_icons;
 
+	}
+
+	/**
+	 * Get copyright text
+	 *
+	 * @return mixed
+	 */
+	public function get_copyright_text() {
+		return get_theme_mod( 'rae_footer_text' );
 	}
 
 	/**
@@ -227,6 +228,24 @@ class Rae_Register_Header_Footer_Api {
 		// Return menu post objects
 		return $menu_items;
 
+	}
+
+	/**
+	 * Returns the content of all the sidebars with given sidebar id.
+	 *
+	 * @param $sidebar_id
+	 *
+	 * @return false|string
+	 */
+	public function get_sidebar( $sidebar_id ) {
+		ob_start();
+
+		dynamic_sidebar(  );
+		$output = ob_get_contents( $sidebar_id );
+
+		ob_end_clean();
+
+		return $output;
 	}
 }
 

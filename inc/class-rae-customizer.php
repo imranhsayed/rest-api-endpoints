@@ -38,6 +38,51 @@ class Rae_Customizer {
 	 */
 	public function customize_register( \WP_Customize_Manager $wp_customize ) {
 
+		$this->social_icon_section( $wp_customize );
+		$this->footer_section( $wp_customize );
+
+	}
+
+	public function footer_section( $wp_customize ) {
+
+		$wp_customize->add_section(
+			'rae_footer',
+			[
+				'title'       => esc_html__( 'Footer', 'rest-api-endpoints' ),
+				'description' => esc_html__( 'Footer', 'rest-api-endpoints' ),
+			]
+		);
+
+		$setting_id = 'rae_footer_text';
+
+		$wp_customize->add_setting(
+			$setting_id,
+			[
+				'default'           => '',
+				'capability'        => 'edit_theme_options',
+				'sanitize_callback' => 'esc_html',
+			]
+		);
+
+		$wp_customize->add_control(
+			$setting_id,
+			[
+				'label'    => esc_html__( 'Copyright text', 'rest-api-endpoints' ),
+				'section'  => 'rae_footer',
+				'settings' => $setting_id,
+				'type'     => 'text',
+			]
+		);
+	}
+
+	/**
+	 * Add social icon section.
+	 *
+	 * @param $wp_customize
+	 */
+	public function social_icon_section( $wp_customize  ) {
+
+		// Social Icons
 		$social_icons = [ 'facebook', 'twitter', 'instagram', 'youtube' ];
 
 		$wp_customize->add_section(
@@ -71,7 +116,6 @@ class Rae_Customizer {
 				]
 			);
 		}
-
 	}
 }
 

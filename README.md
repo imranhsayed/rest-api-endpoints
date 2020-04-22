@@ -57,7 +57,11 @@ Return Value: `Object with post ID and status or Error (Object)`
 
 ## Features
 * Adds option to add social links in customizer
-* Registers two custom menus for header ( menu location = travel-menu-header ) and for footer ( menu location = travel-menu-footer )
+* Registers two custom menus for header ( menu location = rwt-menu-header ) and for footer ( menu location = rwt-menu-footer )
+* Registers the following sidebars
+1. RWT Footer #1 with sidebar id 'rwt-sidebar-1'
+2. RWT Footer #2 with sidebar id 'rwt-sidebar-2'
+
 * Registers custom end points
 
 ## Available Endpoints:
